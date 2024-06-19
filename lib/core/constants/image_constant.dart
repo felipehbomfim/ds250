@@ -8,6 +8,7 @@ class ImageConstant {
 
   // Others
   static String imgNoProfilePic = '$imagePath/img_no_profile_pic.png';
+  static String imgProfilePic = '$imagePath/img_profile_pic.jpg';
 
   //icons
   static String imgPencilIcon = '$iconPath/pencil_icon.png';

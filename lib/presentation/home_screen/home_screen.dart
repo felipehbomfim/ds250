@@ -8,6 +8,7 @@ import '../../model/device_data.dart';
 import '../../services/database_service.dart';
 import '../../services/stomp_service.dart';
 import '../../widgets/custom_text_form_field.dart';
+import '../../widgets/nav_drawer_widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -66,6 +67,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
       child: WillPopScope(
         onWillPop: () async => false,
         child: Scaffold(
+            endDrawer: NavigationDrawerWidget(),
             floatingActionButton: Material(
               color: Colors.transparent,
               child: InkWell(
@@ -142,12 +144,18 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
                             ),
                           ),
                         ),
-                        CustomImageView(
-                          imagePath: ImageConstant.imgNoProfilePic,
-                          height: 50.h,
-                          width: 50.h,
-                          fit: BoxFit.cover,
-                          radius: BorderRadius.circular(100),
+                        InkWell(
+                          borderRadius: BorderRadius.circular(1000),
+                          onTap: () {
+                            _scaffoldKey.currentState!.openEndDrawer();
+                          },
+                          child: CustomImageView(
+                            imagePath: ImageConstant.imgProfilePic,
+                            height: 50.h,
+                            width: 50.h,
+                            fit: BoxFit.cover,
+                            radius: BorderRadius.circular(100),
+                          ),
                         )
                       ],
                     ),
@@ -357,7 +365,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
 
   /// Section Widget
   Widget _buildProgressContainer() {
-    print(totalTasks);
     String message = "Você consegue, vamos lá!";
     String percent = (completionPercentage * 100).toStringAsFixed(2);
     if((completionPercentage * 100 ).toInt() > 60){

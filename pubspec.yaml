@@ -60,6 +60,7 @@ dependencies:
   flutter_switch: ^0.3.2
   flutter_screenutil: ^5.9.1
   toastification: ^2.0.0
+  url_launcher: ^6.3.0
 
 dependency_overrides:
   intl: any
