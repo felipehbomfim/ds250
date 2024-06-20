@@ -1,8 +1,15 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:ds250/core/app_export.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../pdf_view_screen/pdf_view_screen.dart';
 
 class AboutScreen extends StatefulWidget {
   const AboutScreen({super.key});
@@ -12,6 +19,37 @@ class AboutScreen extends StatefulWidget {
 }
 
 class _AboutScreenState extends State<AboutScreen> {
+  String pathPDF = "";
+
+
+  @override
+  void initState() {
+    super.initState();
+    fromAsset('assets/docs/Manual.pdf', 'Manual.pdf').then((f) {
+      setState(() {
+        pathPDF = f.path;
+      });
+    });
+  }
+
+  Future<File> fromAsset(String asset, String filename) async {
+    // To open from assets, you can copy them to the app storage folder, and the access them "locally"
+    Completer<File> completer = Completer();
+
+    try {
+      var dir = await getApplicationDocumentsDirectory();
+      File file = File("${dir.path}/$filename");
+      var data = await rootBundle.load(asset);
+      var bytes = data.buffer.asUint8List();
+      await file.writeAsBytes(bytes, flush: true);
+      completer.complete(file);
+    } catch (e) {
+      throw Exception('Error parsing asset file!');
+    }
+
+    return completer.future;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,18 +103,35 @@ class _AboutScreenState extends State<AboutScreen> {
                 ),
               ),
             ),
-            Divider(color: Colors.black12,),
-            _buildCustomListTile(FontAwesomeIcons.linkedin, "Linkedin" ?? "N/A", true, onTap: openLinkedin),
-            Divider(color: Colors.black12,),
+            Divider(color: Colors.white12,),
+            _buildCustomListTile(
+                FontAwesomeIcons.linkedin,
+                "Linkedin",
+                true,
+                onTap: () => openLink('https://www.linkedin.com/in/felipe-bomfim-836868197/')
+            ),
+            Divider(color: Colors.white12,),
+            _buildCustomListTile(
+                FontAwesomeIcons.list,
+                "Manual",
+                true,
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PDFScreen(path: pathPDF),
+                  ),
+                )
+            ),
+            Divider(color: Colors.white12,),
           ],
         ),
       ),
     );
   }
 
-  void openLinkedin() async {
+  void openLink(String url) async {
     _launchSocialMediaAppIfInstalled(
-      url: 'https://www.linkedin.com/in/felipe-bomfim-836868197/', // Linkedin
+      url: url, // Linkedin
     );
   }
 
