@@ -76,7 +76,6 @@ class _AboutScreenState extends State<AboutScreen> {
             ),
           ),
         ],
-        automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
